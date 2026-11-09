@@ -215,6 +215,8 @@ a { color: inherit; }
   letter-spacing: -0.03em;
 }
 .name span { display: block; }
+.name > span { white-space: nowrap; }
+.name .ch { display: inline-block; will-change: transform; transform-origin: 50% 100%; }
 .name .hl { color: var(--mint); }
 .roles {
   list-style: none;
@@ -691,8 +693,8 @@ a { color: inherit; }
 .hero-in > :nth-child(5) { --i: 4; }
 .hero-in > :nth-child(6) { --i: 5; }
 .hero-in > .name { animation: none; }
-.name span { animation: riseName 1s calc(0.12s + var(--l, 0) * 0.12s) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-.name span:nth-child(2) { --l: 1; }
+.name > span { animation: riseName 1s calc(0.12s + var(--l, 0) * 0.12s) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.name > span:nth-child(2) { --l: 1; }
 .name .hl { width: fit-content; background-position: 0 0; }
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .name .hl {
@@ -1739,6 +1741,149 @@ body.wp-open .wp-stage { display: grid; }
     open();
     try { window.sessionStorage.setItem('wpSeen', '1'); } catch (e) {}
   }
+})();
+</script>
+
+<script>
+/* Hero name letter-wave: on hover, the letters near the cursor lift one by one.
+   The name itself is unchanged (same text, colours and shine sweep). */
+(function () {
+  var name = document.querySelector('.name');
+  if (!name) return;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var supportsClip = !!(window.CSS && CSS.supports && (CSS.supports('-webkit-background-clip', 'text') || CSS.supports('background-clip', 'text')));
+  var words = Array.prototype.slice.call(name.children);
+  var letters = [];
+  var MAX_LIFT = 10, RADIUS = 90;
+  var cursorX = null, cursorY = null, waveStart = null, waveFrom = 0, waveTo = 0;
+  var startT = performance.now();
+
+  function splitWord(word) {
+    var text = word.textContent;
+    var bg = supportsClip ? window.getComputedStyle(word).backgroundImage : 'none';
+    var hasBg = bg && bg !== 'none';
+    word.textContent = '';
+    if (hasBg) word.style.backgroundImage = 'none';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      var s = document.createElement('span');
+      s.className = 'ch';
+      s.textContent = (ch === ' ') ? '\u00A0' : ch;
+      if (hasBg && ch !== ' ') {
+        s.style.backgroundImage = bg;
+        s.style.webkitBackgroundClip = 'text';
+        s.style.backgroundClip = 'text';
+        s.style.color = 'transparent';
+        s.style.webkitTextFillColor = 'transparent';
+      }
+      word.appendChild(s);
+    }
+  }
+
+  function measure() {
+    letters = [];
+    var i, j, word, kids, el, wr, r;
+    for (i = 0; i < words.length; i++) {
+      word = words[i];
+      kids = word.children;
+      for (j = 0; j < kids.length; j++) kids[j].style.transform = '';
+      wr = word.getBoundingClientRect();
+      for (j = 0; j < kids.length; j++) {
+        el = kids[j];
+        r = el.getBoundingClientRect();
+        letters.push({ el: el, wordW: wr.width, offsetX: r.left - wr.left, lift: 0, scale: 1 });
+      }
+    }
+  }
+
+  function easeInOut(u) {
+    return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+  }
+
+  /* Shine sweep, same timing as the CSS shimmer: 1.6s delay, 8s cycle,
+     rest at 100% for the first 45%, then glide to 0%. */
+  function sweepPos(now) {
+    var el = now - startT;
+    if (el < 1600) return 0;
+    var phase = (el - 1600) % 8000;
+    if (phase < 3600) return 100;
+    return 100 - 100 * easeInOut((phase - 3600) / 4400);
+  }
+
+  function frame(now) {
+    var pos = sweepPos(now);
+    var cx = cursorX, cy = cursorY;
+    if (waveStart !== null) {
+      var t = (now - waveStart) / 700;
+      if (t >= 1) { waveStart = null; cx = null; cy = null; }
+      else cx = waveFrom + (waveTo - waveFrom) * t;
+    }
+    for (var i = 0; i < letters.length; i++) {
+      var L = letters[i];
+      var target = 0, targetScale = 1;
+      if (cx !== null) {
+        var r = L.el.getBoundingClientRect();
+        var dx = cx - (r.left + r.width / 2);
+        var dy = (cy !== null) ? cy - (r.top + r.height / 2) : 0;
+        if (Math.abs(dx) < RADIUS && Math.abs(dy) < 70) {
+          var f = Math.pow(1 - Math.abs(dx) / RADIUS, 2);
+          target = -MAX_LIFT * f;
+          targetScale = 1 + 0.07 * f;
+        }
+      }
+      L.lift += (target - L.lift) * 0.22;
+      L.scale += (targetScale - L.scale) * 0.22;
+      if (Math.abs(L.lift) < 0.05 && target === 0) L.lift = 0;
+      if (Math.abs(L.scale - 1) < 0.002 && targetScale === 1) L.scale = 1;
+      L.el.style.transform = (L.lift === 0 && L.scale === 1) ? '' : 'translateY(' + L.lift.toFixed(2) + 'px) scale(' + L.scale.toFixed(3) + ')';
+      if (L.el.style.backgroundImage) {
+        L.el.style.backgroundSize = (2.6 * L.wordW).toFixed(1) + 'px 100%';
+        L.el.style.backgroundPosition = (-(L.offsetX + 1.6 * L.wordW * pos / 100)).toFixed(1) + 'px 0';
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function layoutStatic() {
+    var pos = 100;
+    for (var i = 0; i < letters.length; i++) {
+      var L = letters[i];
+      if (L.el.style.backgroundImage) {
+        L.el.style.backgroundSize = (2.6 * L.wordW).toFixed(1) + 'px 100%';
+        L.el.style.backgroundPosition = (-(L.offsetX + 1.6 * L.wordW * pos / 100)).toFixed(1) + 'px 0';
+      }
+    }
+  }
+
+  var splitDone = false;
+  function init() {
+    if (splitDone) return;
+    splitDone = true;
+    for (var i = 0; i < words.length; i++) splitWord(words[i]);
+    measure();
+    if (reduced) { layoutStatic(); return; }
+    name.addEventListener('pointermove', function (e) { cursorX = e.clientX; cursorY = e.clientY; });
+    name.addEventListener('pointerleave', function () { cursorX = null; cursorY = null; });
+    name.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'touch') return;
+      var r = name.getBoundingClientRect();
+      waveFrom = r.left - 40;
+      waveTo = r.right + 40;
+      waveStart = performance.now();
+    });
+    requestAnimationFrame(frame);
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { init(); measure(); if (reduced) layoutStatic(); });
+  }
+  window.addEventListener('load', function () { init(); measure(); if (reduced) layoutStatic(); });
+  setTimeout(function () { init(); measure(); if (reduced) layoutStatic(); }, 1200);
+  var rsT = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rsT);
+    rsT = setTimeout(function () { if (splitDone) { measure(); if (reduced) layoutStatic(); } }, 150);
+  });
 })();
 </script>
 
