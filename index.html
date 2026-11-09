@@ -1714,8 +1714,13 @@ body.wp-open .wp-stage { display: grid; }
   window.addEventListener('pointermove', onMove);
   window.addEventListener('pointerleave', function () { wrap.style.transform = ''; });
 
-  /* ---------- auto-open the moment the page markup is ready ---------- */
-  open();
+  /* ---------- auto-open once per tab: first visit in this tab shows it, refreshes don't, a new tab shows it again ---------- */
+  var seen = false;
+  try { seen = window.sessionStorage.getItem('wpSeen') === '1'; } catch (e) {}
+  if (!seen) {
+    open();
+    try { window.sessionStorage.setItem('wpSeen', '1'); } catch (e) {}
+  }
 })();
 </script>
 
