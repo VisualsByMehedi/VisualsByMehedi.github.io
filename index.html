@@ -471,7 +471,7 @@ a { color: inherit; }
 .sc-stage { background: #101312; border-bottom: 1px solid var(--line); }
 .sc-meta { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1rem; padding: 1rem 1.25rem; }
 .sc-meta h3 { margin: 0; font: 700 1.125rem/1.3 var(--display); }
-.sc-meta span { font: 500 0.7rem/1.5 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+.sc-meta span { font: 500 0.7rem/1.5 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
 
 /* Premiere Pro */
 .pr { font: 500 0.72rem/1.4 var(--mono); color: #cfd4d1; }
@@ -577,7 +577,7 @@ a { color: inherit; }
 .mt-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.35rem 0; border-top: 1px solid #e4e6eb; }
 .mt-thumb { width: 2.2rem; height: 1.4rem; flex: none; border-radius: 3px; background: var(--footage) center/cover; }
 .mt-thumb.ph2 { background-image: var(--poster); }
-.mt-row span { color: #1c1e21; font-family: var(--body); font-size: 0.72rem; }
+.mt-row span { color: #1c1e21; font-family: var(--body); font-size: 0.72rem; min-width: 0; }
 .mt-row b { margin-left: auto; color: #65676b; font-weight: 500; white-space: nowrap; }
 
 /* WhatsApp */
@@ -711,7 +711,7 @@ a { color: inherit; }
 .social-icon.yt { background: #ff0000; }
 .social-icon.li { background: #0a66c2; }
 .social-text { display: grid; gap: 0.15rem; min-width: 0; }
-.social-text h3 { margin: 0; font: 700 1.0625rem/1.35 var(--body); color: var(--fg); }
+.social-text h3 { margin: 0; font: 700 1.0625rem/1.35 var(--body); color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .social-text p { margin: 0; font-size: 0.875rem; color: var(--muted); overflow-wrap: anywhere; }
 .social-arrow { margin-left: auto; flex: 0 0 auto; font-size: 1.25rem; line-height: 1; color: var(--muted); }
 .social-card:hover .social-arrow { color: var(--gold); }
@@ -1019,7 +1019,6 @@ a { color: inherit; }
   .playhead { left: calc(var(--label) + var(--gap) + (100% - var(--label) - var(--gap)) * 0.7); }
   .cta-row .btn { flex: 1 1 100%; }
   .name { font-size: clamp(2.5rem, 10.5vw, 3rem); }
-  .name > span { white-space: normal; }
 }
 
 /* Very small screens: keep every timeline clip label on one line */
@@ -2047,10 +2046,29 @@ body.wp-open .wp-stage { display: grid; }
   }
 
   var splitDone = false;
+  /* Shrink the name until its longest word fits the line: on phones with
+     large text scaling the CSS size can overflow and wrap mid-word. */
+  function fitName() {
+    name.style.fontSize = '';
+    var maxW = name.clientWidth;
+    if (!maxW) return;
+    var size = parseFloat(getComputedStyle(name).fontSize) || 16;
+    var guard = 0;
+    while (guard++ < 14) {
+      var overflow = false;
+      for (var i = 0; i < words.length; i++) {
+        if (words[i].scrollWidth > maxW + 1) { overflow = true; break; }
+      }
+      if (!overflow) break;
+      size *= 0.92;
+      name.style.fontSize = size.toFixed(2) + 'px';
+    }
+  }
   function init() {
     if (splitDone) return;
     splitDone = true;
     for (var i = 0; i < words.length; i++) splitWord(words[i]);
+    fitName();
     measure();
     if (reduced) { layoutStatic(); return; }
     name.addEventListener('pointermove', function (e) { cursorX = e.clientX; cursorY = e.clientY; });
@@ -2066,14 +2084,14 @@ body.wp-open .wp-stage { display: grid; }
   }
 
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { init(); measure(); if (reduced) layoutStatic(); });
+    document.fonts.ready.then(function () { init(); fitName(); measure(); if (reduced) layoutStatic(); });
   }
-  window.addEventListener('load', function () { init(); measure(); if (reduced) layoutStatic(); });
-  setTimeout(function () { init(); measure(); if (reduced) layoutStatic(); }, 1200);
+  window.addEventListener('load', function () { init(); fitName(); measure(); if (reduced) layoutStatic(); });
+  setTimeout(function () { init(); fitName(); measure(); if (reduced) layoutStatic(); }, 1200);
   var rsT = null;
   window.addEventListener('resize', function () {
     clearTimeout(rsT);
-    rsT = setTimeout(function () { if (splitDone) { measure(); if (reduced) layoutStatic(); } }, 150);
+    rsT = setTimeout(function () { if (splitDone) { fitName(); measure(); if (reduced) layoutStatic(); } }, 150);
   });
 })();
 </script>
