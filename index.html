@@ -601,11 +601,26 @@ a { color: inherit; }
 
 .foot { border-top: 1px solid var(--line); }
 .foot-in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
   padding-block: 1.75rem;
   font: 500 0.75rem/1.5 var(--mono);
   letter-spacing: 0.04em;
   color: var(--muted);
 }
+.to-top {
+  flex: 0 0 auto;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--fg);
+  text-decoration: none;
+  transition: border-color 0.3s, color 0.3s;
+}
+.to-top:hover { border-color: var(--gold); color: var(--gold); }
 
 /* ---- Premium layer: atmosphere, motion, depth ---- */
 @property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
@@ -1108,6 +1123,7 @@ body.wp-open .wp-stage { display: grid; }
   <div class="wrap top-in">
     <a class="mark" href="#top" aria-label="Md Mehedi Hasan, back to top">M<span>H</span></a>
     <nav class="nav" aria-label="Sections">
+      <a href="#top">Home</a>
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#education">Education</a>
@@ -1415,7 +1431,7 @@ body.wp-open .wp-stage { display: grid; }
 </main>
 
 <footer class="foot">
-  <div class="wrap foot-in">Md Mehedi Hasan · Bera, Pabna, Bangladesh · LinkedIn</div>
+  <div class="wrap foot-in"><span>Md Mehedi Hasan · Bera, Pabna, Bangladesh · LinkedIn</span><a class="to-top" href="#top">Back to top &uarr;</a></div>
 </footer>
 
 <script>
@@ -1460,8 +1476,14 @@ body.wp-open .wp-stage { display: grid; }
   window.addEventListener('resize', update);
   update();
 
-  /* Premium layer */
+  /* Home tab + Back to top: always scroll to the very top, even if #top is already in the URL */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('a[href="#top"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  });
   var spotSel = '.glance-item, .goal, .facts, .tl, .fit, .social-card';
   var heroEl = document.getElementById('top');
 
