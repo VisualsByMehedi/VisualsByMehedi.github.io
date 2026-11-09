@@ -703,6 +703,18 @@ a { color: inherit; }
   }
 }
 @keyframes shimmer { 0%, 45% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+.name .shine { width: fit-content; background-position: 0 0; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .name .shine {
+    background-image: linear-gradient(100deg, var(--fg) 0%, var(--fg) 40%, var(--gold) 48%, var(--mint) 54%, var(--fg) 62%, var(--fg) 100%);
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: riseName 1s 0.12s cubic-bezier(0.2, 0.8, 0.2, 1) both, shimmer 8s 1.6s ease-in-out infinite;
+  }
+}
 
 .eyebrow-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin-bottom: 1rem; }
 .eyebrow-row .eyebrow { margin: 0; }
@@ -946,7 +958,7 @@ a { color: inherit; }
             <p class="eyebrow">Bera, Pabna, Bangladesh</p>
             <p class="status"><i></i>Open to entry-level roles</p>
           </div>
-          <h1 class="name"><span class="hl">Md Mehedi</span><span class="hl">Hasan</span></h1>
+          <h1 class="name"><span class="shine">Md Mehedi</span><span class="hl">Hasan</span></h1>
           <ul class="roles">
             <li>Marketing Student</li>
             <li>Video Editor</li>
