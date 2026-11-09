@@ -1633,7 +1633,7 @@ body.wp-open .wp-stage { display: grid; }
       </div>
       <div class="wp-timer wp-pop-item" style="--i:6">
         <div class="wp-timer-track"><div class="wp-timer-bar" id="wpTimerBar"></div></div>
-        <p class="wp-timer-text">Auto-closing in <span id="wpTimerNum">10</span>s</p>
+        <p class="wp-timer-text">Auto-closing in <span id="wpTimerNum">15</span>s</p>
       </div>
     </div>
   </div>
@@ -1649,7 +1649,7 @@ body.wp-open .wp-stage { display: grid; }
   var confettiBox = document.getElementById('wpConfetti');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var settleTimer = null;
-  var COUNTDOWN = 10; /* seconds until the popup closes by itself */
+  var COUNTDOWN = 15; /* seconds until the popup closes by itself */
   var cdLeft = COUNTDOWN, cdInt = null;
   var timerNum = document.getElementById('wpTimerNum');
   var timerBar = document.getElementById('wpTimerBar');
