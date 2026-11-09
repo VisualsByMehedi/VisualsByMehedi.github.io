@@ -1760,9 +1760,8 @@ body.wp-open .wp-stage { display: grid; }
   window.addEventListener('pointermove', onMove);
   window.addEventListener('pointerleave', function () { wrap.style.transform = ''; });
 
-  /* ---------- auto-open shortly after load ---------- */
-  window.addEventListener('load', function () { setTimeout(open, 650); });
-  if (document.readyState === 'complete') setTimeout(open, 650);
+  /* ---------- auto-open as soon as the page markup is ready (no waiting for full load) ---------- */
+  setTimeout(open, 100);
 })();
 </script>
 
