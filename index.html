@@ -591,6 +591,7 @@ a { color: inherit; }
 .social-icon.fb { background: #1877f2; }
 .social-icon.ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
 .social-icon.yt { background: #ff0000; }
+.social-icon.li { background: #0a66c2; }
 .social-text { display: grid; gap: 0.15rem; min-width: 0; }
 .social-text h3 { margin: 0; font: 700 1.0625rem/1.35 var(--body); color: var(--fg); }
 .social-text p { margin: 0; font-size: 0.875rem; color: var(--muted); overflow-wrap: anywhere; }
@@ -598,20 +599,6 @@ a { color: inherit; }
 .social-card:hover .social-arrow { color: var(--gold); }
 
 
-/* Contact */
-.contact-card {
-  display: grid;
-  gap: 1.25rem;
-  justify-items: start;
-  padding: clamp(1.5rem, 5vw, 3.25rem);
-  background: radial-gradient(80% 120% at 0% 0%, var(--clip-mint-bg), transparent 60%), var(--surface);
-  border: 1px solid var(--clip-mint-bd);
-  border-radius: 14px;
-}
-.contact-card p { max-width: 54ch; margin: 0; color: var(--fg-soft); font-size: 1.0625rem; }
-.url-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; max-width: 100%; }
-.url { font: 500 0.875rem/1.5 var(--mono); overflow-wrap: anywhere; color: var(--fg); }
-.contact-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 .foot { border-top: 1px solid var(--line); }
 .foot-in {
   padding-block: 1.75rem;
@@ -813,8 +800,8 @@ a { color: inherit; }
 @keyframes marq { to { transform: translateX(-50%); } }
 
 /* Spotlight cards */
-.glance-item, .goal, .facts, .tl, .fit, .contact-card, .social-card { position: relative; isolation: isolate; }
-.glance-item::before, .goal::before, .facts::before, .tl::before, .fit::before, .contact-card::before, .social-card::before {
+.glance-item, .goal, .facts, .tl, .fit, .social-card { position: relative; isolation: isolate; }
+.glance-item::before, .goal::before, .facts::before, .tl::before, .fit::before, .social-card::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -825,7 +812,7 @@ a { color: inherit; }
   transition: opacity 0.35s;
   background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
 }
-.glance-item:hover::before, .goal:hover::before, .facts:hover::before, .tl:hover::before, .fit:hover::before, .contact-card:hover::before, .social-card:hover::before { opacity: 1; }
+.glance-item:hover::before, .goal:hover::before, .facts:hover::before, .tl:hover::before, .fit:hover::before, .social-card:hover::before { opacity: 1; }
 .glance-item, .goal, .social-card { transition: border-color 0.3s; }
 .glance-item:hover, .goal:hover, .social-card:hover { border-color: var(--clip-mint-bd); }
 
@@ -851,24 +838,9 @@ a { color: inherit; }
 @keyframes grow { from { transform: scaleX(0); } }
 .edu-item.in .gpa-bar i { animation: grow 1.3s 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 
-/* Contact card: slow light travelling around the border */
-.contact-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  pointer-events: none;
-  background: conic-gradient(from var(--angle), transparent 0 68%, var(--mint) 86%, var(--gold) 95%, transparent 100%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  animation: spin 8s linear infinite;
-}
-@keyframes spin { to { --angle: 360deg; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .aurora i, .marq, .name span, .name .hl, .hero-in > *, .clip, .status i, .contact-card::after, .edu-item.in .gpa-bar i { animation: none !important; }
+  .aurora i, .marq, .name span, .name .hl, .hero-in > *, .clip, .status i, .edu-item.in .gpa-bar i { animation: none !important; }
   .aurora { transform: none; transition: none; }
   .rv, .rv.in { opacity: 1; transform: none; transition: none; }
   .sec-title.rv::after { transform: none; transition: none; }
@@ -1141,7 +1113,6 @@ body.wp-open .wp-stage { display: grid; }
       <a href="#education">Education</a>
       <a href="#goals">Career goals</a>
       <a href="#social">Social</a>
-      <a href="#contact">Contact</a>
     </nav>
     <div class="top-right">
       <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch between dark and light mode">Light mode</button>
@@ -1432,25 +1403,15 @@ body.wp-open .wp-stage { display: grid; }
           <span class="social-text"><h3>YouTube</h3><p>@mehan_verse · 1.46K subscribers</p></span>
           <span class="social-arrow" aria-hidden="true">↗</span>
         </a>
+        <a class="social-card" href="https://www.linkedin.com/in/md-mehedi-hasan-119590441" target="_blank" rel="noopener">
+          <span class="social-icon li" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></span>
+          <span class="social-text"><h3>LinkedIn</h3><p>Professional network</p></span>
+          <span class="social-arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <section class="sec" id="contact">
-    <div class="wrap sec-in">
-      <div class="contact-card">
-        <h2 class="sec-title">Let us connect</h2>
-        <p>I am open to entry-level opportunities in marketing, sales, business development and customer service. The fastest way to reach me is through LinkedIn.</p>
-        <div class="contact-actions">
-          <a class="btn" href="https://www.linkedin.com/in/md-mehedi-hasan-119590441" target="_blank" rel="noopener">Open LinkedIn profile</a>
-          <button class="btn ghost" id="copyBtn" type="button">Copy link</button>
-        </div>
-        <div class="url-row">
-          <span class="url" id="liUrl">linkedin.com/in/md-mehedi-hasan-119590441</span>
-        </div>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer class="foot">
@@ -1499,28 +1460,9 @@ body.wp-open .wp-stage { display: grid; }
   window.addEventListener('resize', update);
   update();
 
-  var copyBtn = document.getElementById('copyBtn');
-  var urlEl = document.getElementById('liUrl');
-  var full = 'https://www.linkedin.com/in/md-mehedi-hasan-119590441';
-  function selectUrl() {
-    var r = document.createRange();
-    r.selectNodeContents(urlEl);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(r);
-  }
-  copyBtn.addEventListener('click', function () {
-    var done = function (msg) {
-      copyBtn.textContent = msg;
-      setTimeout(function () { copyBtn.textContent = 'Copy link'; }, 2200);
-    };
-    try {
-      navigator.clipboard.writeText(full).then(function () { done('Copied'); }, function () { selectUrl(); done('Selected, press copy'); });
-    } catch (e) { selectUrl(); done('Selected, press copy'); }
-  });
   /* Premium layer */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var spotSel = '.glance-item, .goal, .facts, .tl, .fit, .contact-card, .social-card';
+  var spotSel = '.glance-item, .goal, .facts, .tl, .fit, .social-card';
   var heroEl = document.getElementById('top');
 
   document.addEventListener('pointermove', function (e) {
@@ -1545,7 +1487,7 @@ body.wp-open .wp-stage { display: grid; }
         if (en.isIntersecting) { en.target.classList.add('in'); revealIo.unobserve(en.target); }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    document.querySelectorAll('.sec-title, .sec-sub, .prose, .glance, .group, .fit, .edu-item, .goal, .contact-card, .social-card').forEach(function (t) {
+    document.querySelectorAll('.sec-title, .sec-sub, .prose, .glance, .group, .fit, .edu-item, .goal, .social-card').forEach(function (t) {
       var idx = t.parentElement ? Array.prototype.indexOf.call(t.parentElement.children, t) : 0;
       t.style.setProperty('--rd', Math.min(idx, 5));
       t.classList.add('rv');
@@ -1579,7 +1521,7 @@ body.wp-open .wp-stage { display: grid; }
         navLinks.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id); });
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
-    ['top', 'about', 'skills', 'education', 'goals', 'social', 'contact'].forEach(function (id) {
+    ['top', 'about', 'skills', 'education', 'goals', 'social'].forEach(function (id) {
       var s = document.getElementById(id);
       if (s) navIo.observe(s);
     });
