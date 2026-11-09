@@ -94,7 +94,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scrollbar-color: var(--line-strong) var(--bg); }
+html { scroll-behavior: smooth; scrollbar-color: var(--line-strong) var(--bg); overflow-x: clip; }
 ::selection { background: var(--mint); color: var(--mint-ink); }
 body {
   margin: 0;
@@ -1018,6 +1018,8 @@ a { color: inherit; }
   .ruler b:nth-of-type(2), .ruler b:nth-of-type(4) { display: none; }
   .playhead { left: calc(var(--label) + var(--gap) + (100% - var(--label) - var(--gap)) * 0.7); }
   .cta-row .btn { flex: 1 1 100%; }
+  .name { font-size: clamp(2.5rem, 10.5vw, 3rem); }
+  .name > span { white-space: normal; }
 }
 
 /* Very small screens: keep every timeline clip label on one line */
@@ -1078,7 +1080,6 @@ body.wp-open .wp-stage { display: grid; }
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   padding: 30px 30px 26px;
   text-align: center;
-  transform-style: preserve-3d;
   opacity: 0;
   overflow: visible;
   font-family: "Manrope", system-ui, sans-serif;
@@ -1103,13 +1104,13 @@ body.wp-open .wp-stage { display: grid; }
   to { opacity: 0; transform: rotateY(38deg) rotateX(-8deg) translateZ(-140px) scale(0.9); }
 }
 .wp-settled .wp-card { opacity: 1; animation: wpSway 6.5s ease-in-out infinite; }
-.wp-settled .wp-pop-item { opacity: 1; transform: translateZ(34px); }
+.wp-settled .wp-pop-item { opacity: 1; transform: none; }
 .wp-settled .wp-chip { opacity: 1; animation: wpFloaty 5s ease-in-out infinite; animation-delay: calc(var(--i) * 0.4s); }
 .wp-settled .wp-orbit { opacity: 1; animation: wpOrbitSpin 14s linear infinite; }
 .wp-settled .wp-floor-shadow { opacity: 1; }
 @keyframes wpSway {
-  0%, 100% { transform: rotateX(1.2deg) rotateY(-1.6deg) translateY(0); }
-  50%      { transform: rotateX(-1.2deg) rotateY(1.6deg) translateY(-7px); }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
 }
 .wp-cube-scene {
   display: flex; align-items: center; justify-content: center; gap: 24px;
@@ -1153,8 +1154,8 @@ body.wp-open .wp-stage { display: grid; }
 .wp-pop-item { opacity: 0; }
 .wp-playing .wp-pop-item { animation: wpItemIn 0.45s cubic-bezier(0.2, 1.2, 0.3, 1) forwards; animation-delay: calc(0.12s + var(--i) * 0.05s); }
 @keyframes wpItemIn {
-  from { opacity: 0; transform: translateY(16px) translateZ(0) scale(0.96); }
-  to   { opacity: 1; transform: translateY(0) translateZ(34px) scale(1); }
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .wp-card h2 {
   font-family: "Sora", sans-serif; font-weight: 800;
@@ -1186,10 +1187,9 @@ body.wp-open .wp-stage { display: grid; }
   width: 38px; height: 38px; border-radius: 50%;
   border: 1px solid var(--wp-line); background: rgba(255,255,255,0.05);
   color: var(--wp-fg); cursor: pointer; display: grid; place-items: center;
-  transform: translateZ(50px);
   transition: background 0.18s ease, transform 0.18s ease;
 }
-.wp-close-x:hover { background: rgba(255,255,255,0.13); transform: translateZ(50px) rotate(90deg); }
+.wp-close-x:hover { background: rgba(255,255,255,0.13); transform: rotate(90deg); }
 .wp-close-x svg { width: 16px; height: 16px; }
 .wp-chip {
   position: absolute; z-index: 4;
@@ -1201,14 +1201,29 @@ body.wp-open .wp-stage { display: grid; }
   opacity: 0; white-space: nowrap;
 }
 .wp-chip svg { width: 13px; height: 13px; flex: none; }
-.wp-chip-a { top: 64px; left: -58px; transform: translateZ(80px); }
-.wp-chip-b { bottom: 92px; right: -52px; transform: translateZ(90px); }
-.wp-chip-c { top: -20px; right: 34px; transform: translateZ(70px); }
+.wp-chip-a { top: 64px; left: -58px; }
+.wp-chip-b { bottom: 92px; right: -52px; }
+.wp-chip-c { top: -20px; right: 34px; }
 @media (max-width: 560px) {
   .wp-chip { font-size: 11.5px; padding: 7px 11px; }
   .wp-chip-a { top: -14px; left: 10px; }
-  .wp-chip-b { bottom: -14px; right: 12px; }
+  .wp-chip-b { bottom: 12px; right: 12px; }
   .wp-chip-c { top: -16px; right: 16px; }
+  .wp-card { padding: 22px 18px 20px; }
+  .wp-cube-scene { height: 100px; margin-bottom: 6px; }
+  .wp-cube-cell, .wp-cube { width: 60px; height: 60px; }
+  .wp-cube-shadow { width: 60px; }
+  .wp-face { font-size: 34px; border-radius: 11px; }
+  .wp-face-f { transform: translateZ(30px); }
+  .wp-face-b { transform: rotateY(180deg) translateZ(30px); }
+  .wp-face-r { transform: rotateY(90deg) translateZ(30px); }
+  .wp-face-l { transform: rotateY(-90deg) translateZ(30px); }
+  .wp-face-t { transform: rotateX(90deg) translateZ(30px); }
+  .wp-face-d { transform: rotateX(-90deg) translateZ(30px); }
+  .wp-card h2 { font-size: 26px; }
+  .wp-msg { font-size: 14px; margin: 10px auto 18px; }
+  .wp-btn { font-size: 14px; padding: 11px 20px; }
+  .wp-timer { margin-top: 14px; }
 }
 .wp-playing .wp-chip { animation: wpChipIn 0.45s cubic-bezier(0.2, 1.3, 0.3, 1) forwards, wpFloaty 5s ease-in-out infinite; animation-delay: calc(0.25s + var(--i) * 0.08s), calc(0.7s + var(--i) * 0.3s); }
 @keyframes wpChipIn { from { opacity: 0; scale: 0.5; } to { opacity: 1; scale: 1; } }
@@ -1557,11 +1572,6 @@ body.wp-open .wp-stage { display: grid; }
         <a class="social-card" href="https://www.facebook.com/mehedi3232" target="_blank" rel="noopener">
           <span class="social-icon fb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>
           <span class="social-text"><h3>Facebook Profile</h3><p>Md Mehedi Hasan</p></span>
-          <span class="social-arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="social-card" href="https://www.instagram.com/mehanvlogs1" target="_blank" rel="noopener">
-          <span class="social-icon ig" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></span>
-          <span class="social-text"><h3>Instagram</h3><p>@mehanvlogs1</p></span>
           <span class="social-arrow" aria-hidden="true">↗</span>
         </a>
         <a class="social-card" href="https://www.instagram.com/mehedi.3232" target="_blank" rel="noopener">
