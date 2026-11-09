@@ -356,7 +356,7 @@ a { color: inherit; }
   left: calc(var(--label) + var(--gap) + (100% - var(--label) - var(--gap)) * 0.62);
   width: 0;
   pointer-events: none;
-  animation: sweep 2.4s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+  animation: sweepHero 2.4s cubic-bezier(0.3, 0.7, 0.2, 1) both;
 }
 .playhead::before {
   content: "";
@@ -376,7 +376,7 @@ a { color: inherit; }
   border-right: 5px solid transparent;
   border-top: 7px solid var(--gold);
 }
-@keyframes sweep { from { left: calc(var(--label) + var(--gap)); } }
+@keyframes sweepHero { from { left: calc(var(--label) + var(--gap)); } }
 .tl-legend {
   display: flex;
   flex-wrap: wrap;
