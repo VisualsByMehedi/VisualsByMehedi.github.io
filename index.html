@@ -866,6 +866,16 @@ a { color: inherit; }
   .playhead { left: calc(var(--label) + var(--gap) + (100% - var(--label) - var(--gap)) * 0.7); }
   .cta-row .btn { flex: 1 1 100%; }
 }
+
+/* Very small screens: keep every timeline clip label on one line */
+@media (max-width: 400px) {
+  .tl { --label: 1.5rem; padding: 0.6rem; }
+  .clip { font-size: 0.5625rem; padding: 0.3rem 0.35rem; }
+}
+@media (max-width: 340px) {
+  .tl { --label: 1.25rem; }
+  .clip { font-size: 0.5rem; }
+}
 </style>
 
 <header class="top">
