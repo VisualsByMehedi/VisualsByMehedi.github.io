@@ -561,6 +561,27 @@ a { color: inherit; }
 .goal h3 { margin: 0 0 0.4rem; font: 700 1.0625rem/1.35 var(--body); }
 .goal p { margin: 0; font-size: 0.9375rem; color: var(--muted); }
 
+/* Social media */
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.social-card {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  padding: 1.25rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.social-card h3 { margin: 0; font: 700 1.0625rem/1.35 var(--body); }
+.social-handle { margin: 0; font: 500 0.875rem/1.5 var(--mono); color: var(--gold); overflow-wrap: anywhere; }
+.social-card p:not(.social-handle) { margin: 0; font-size: 0.9375rem; color: var(--muted); }
+.social-card .btn { justify-self: start; margin-top: 0.5rem; }
+
 /* Contact */
 .contact-card {
   display: grid;
@@ -764,8 +785,8 @@ a { color: inherit; }
 @keyframes marq { to { transform: translateX(-50%); } }
 
 /* Spotlight cards */
-.glance-item, .goal, .facts, .tl, .fit, .contact-card { position: relative; isolation: isolate; }
-.glance-item::before, .goal::before, .facts::before, .tl::before, .fit::before, .contact-card::before {
+.glance-item, .goal, .facts, .tl, .fit, .contact-card, .social-card { position: relative; isolation: isolate; }
+.glance-item::before, .goal::before, .facts::before, .tl::before, .fit::before, .contact-card::before, .social-card::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -776,9 +797,9 @@ a { color: inherit; }
   transition: opacity 0.35s;
   background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
 }
-.glance-item:hover::before, .goal:hover::before, .facts:hover::before, .tl:hover::before, .fit:hover::before, .contact-card:hover::before { opacity: 1; }
-.glance-item, .goal { transition: border-color 0.3s; }
-.glance-item:hover, .goal:hover { border-color: var(--clip-mint-bd); }
+.glance-item:hover::before, .goal:hover::before, .facts:hover::before, .tl:hover::before, .fit:hover::before, .contact-card:hover::before, .social-card:hover::before { opacity: 1; }
+.glance-item, .goal, .social-card { transition: border-color 0.3s; }
+.glance-item:hover, .goal:hover, .social-card:hover { border-color: var(--clip-mint-bd); }
 
 /* Skill hover */
 .skill h4 {
@@ -837,9 +858,10 @@ a { color: inherit; }
   .fact:nth-child(odd) { border-right: 1px solid var(--line); }
   .fact:nth-child(even) { border-right: 0; }
   .fact:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .social-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .goal-grid { grid-template-columns: minmax(0, 1fr); }
+  .goal-grid, .social-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   .edu-item { grid-template-columns: minmax(0, 1fr); }
@@ -879,6 +901,7 @@ a { color: inherit; }
       <a href="#skills">Skills</a>
       <a href="#education">Education</a>
       <a href="#goals">Career goals</a>
+      <a href="#social">Social</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="top-right">
@@ -1144,6 +1167,33 @@ a { color: inherit; }
     </div>
   </section>
 
+  <section class="sec" id="social">
+    <div class="wrap sec-in">
+      <h2 class="sec-title">Social media</h2>
+      <p class="sec-sub">My content lives here — short vlogs, mood reels, Bengali songs and AI animation, under the name Mehan Verse.</p>
+      <div class="social-grid">
+        <article class="social-card">
+          <h3>Facebook</h3>
+          <p class="social-handle">facebook.com/mehanvlogs</p>
+          <p>Mehan Verse — short vlogs, mood reels and updates. Around 23,000 followers.</p>
+          <a class="btn ghost" href="https://www.facebook.com/mehanvlogs" target="_blank" rel="noopener">Visit Facebook</a>
+        </article>
+        <article class="social-card">
+          <h3>Instagram</h3>
+          <p class="social-handle">@mehanvlogs1</p>
+          <p>Reels and behind-the-scenes from Mehan Verse.</p>
+          <a class="btn ghost" href="https://www.instagram.com/mehanvlogs1" target="_blank" rel="noopener">Visit Instagram</a>
+        </article>
+        <article class="social-card">
+          <h3>TikTok</h3>
+          <p class="social-handle">@mehanvlogs</p>
+          <p>Short videos and trends from Mehan Verse.</p>
+          <a class="btn ghost" href="https://www.tiktok.com/@mehanvlogs" target="_blank" rel="noopener">Visit TikTok</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section class="sec" id="contact">
     <div class="wrap sec-in">
       <div class="contact-card">
@@ -1228,7 +1278,7 @@ a { color: inherit; }
   });
   /* Premium layer */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var spotSel = '.glance-item, .goal, .facts, .tl, .fit, .contact-card';
+  var spotSel = '.glance-item, .goal, .facts, .tl, .fit, .contact-card, .social-card';
   var heroEl = document.getElementById('top');
 
   document.addEventListener('pointermove', function (e) {
@@ -1253,7 +1303,7 @@ a { color: inherit; }
         if (en.isIntersecting) { en.target.classList.add('in'); revealIo.unobserve(en.target); }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    document.querySelectorAll('.sec-title, .sec-sub, .prose, .glance, .group, .fit, .edu-item, .goal, .contact-card').forEach(function (t) {
+    document.querySelectorAll('.sec-title, .sec-sub, .prose, .glance, .group, .fit, .edu-item, .goal, .contact-card, .social-card').forEach(function (t) {
       var idx = t.parentElement ? Array.prototype.indexOf.call(t.parentElement.children, t) : 0;
       t.style.setProperty('--rd', Math.min(idx, 5));
       t.classList.add('rv');
@@ -1287,7 +1337,7 @@ a { color: inherit; }
         navLinks.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id); });
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
-    ['top', 'about', 'skills', 'education', 'goals', 'contact'].forEach(function (id) {
+    ['top', 'about', 'skills', 'education', 'goals', 'social', 'contact'].forEach(function (id) {
       var s = document.getElementById(id);
       if (s) navIo.observe(s);
     });
